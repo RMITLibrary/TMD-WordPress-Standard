@@ -247,7 +247,13 @@ function bulk_taxonomy_insert_page() {
 add_action('wp_ajax_get_taxonomy_info', 'ajax_get_taxonomy_info');
 
 function ajax_get_taxonomy_info() {
-    $taxonomy = sanitize_text_field($_POST['taxonomy']);
+    check_ajax_referer('bulk_taxonomy_nonce');
+
+    if (!current_user_can('manage_categories')) {
+        wp_send_json_error('forbidden', 403);
+    }
+
+    $taxonomy = isset($_POST['taxonomy']) ? sanitize_text_field($_POST['taxonomy']) : '';
     $tax_obj = get_taxonomy($taxonomy);
 
     if ($tax_obj) {
@@ -265,7 +271,13 @@ function ajax_get_taxonomy_info() {
 add_action('wp_ajax_get_taxonomy_terms', 'ajax_get_taxonomy_terms');
 
 function ajax_get_taxonomy_terms() {
-    $taxonomy = sanitize_text_field($_POST['taxonomy']);
+    check_ajax_referer('bulk_taxonomy_nonce');
+
+    if (!current_user_can('manage_categories')) {
+        wp_send_json_error('forbidden', 403);
+    }
+
+    $taxonomy = isset($_POST['taxonomy']) ? sanitize_text_field($_POST['taxonomy']) : '';
 
     $terms = get_terms(array(
         'taxonomy' => $taxonomy,
