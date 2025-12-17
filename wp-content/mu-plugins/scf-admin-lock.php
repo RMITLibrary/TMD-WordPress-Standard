@@ -15,9 +15,12 @@ function tmd_scf_admin_allowed() {
     if (defined('WP_ENV') && in_array(strtolower(WP_ENV), ['development', 'local'], true)) {
         return true;
     }
-    // Allow on localhost loopback
+    // Allow on local hosts (.test, localhost)
     $host = $_SERVER['HTTP_HOST'] ?? '';
     if (in_array($host, ['localhost', '127.0.0.1'], true)) {
+        return true;
+    }
+    if ($host && preg_match('/\\.test$/', $host)) {
         return true;
     }
     return false;
