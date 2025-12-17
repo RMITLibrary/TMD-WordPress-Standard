@@ -23,6 +23,11 @@ function tmd_scf_admin_allowed() {
     return false;
 }
 
+// Hide SCF/ACF admin UI outside allowed environments.
+add_filter('acf/settings/show_admin', function ($show) {
+    return tmd_scf_admin_allowed();
+});
+
 add_action('admin_init', function () {
     if (tmd_scf_admin_allowed()) {
         return;
@@ -34,13 +39,17 @@ add_action('admin_init', function () {
     if ($screen && isset($screen->post_type) && $screen->post_type === 'scf_field_group') {
         $is_scf_screen = true;
     }
-    if (isset($_GET['post_type']) && $_GET['post_type'] === 'scf_field_group') {
+    // Secure Custom Fields uses ACF-style post types.
+    if ($screen && isset($screen->post_type) && in_array($screen->post_type, ['acf-field-group', 'acf-field'], true)) {
+        $is_scf_screen = true;
+    }
+    if (isset($_GET['post_type']) && in_array($_GET['post_type'], ['acf-field-group', 'acf-field', 'scf_field_group'], true)) {
         $is_scf_screen = true;
     }
     if (isset($_GET['post'])) {
         $post_id = absint($_GET['post']);
         $post = get_post($post_id);
-        if ($post && $post->post_type === 'scf_field_group') {
+        if ($post && in_array($post->post_type, ['acf-field-group', 'acf-field', 'scf_field_group'], true)) {
             $is_scf_screen = true;
         }
     }
@@ -58,6 +67,8 @@ add_action('admin_menu', function () {
     if (tmd_scf_admin_allowed()) {
         return;
     }
-    // Hide SCF menu and any CPT UI for SCF.
+    // Hide SCF/ACF menu and CPT UI.
+    remove_menu_page('edit.php?post_type=acf-field-group');
+    remove_menu_page('edit.php?post_type=acf-field');
     remove_menu_page('edit.php?post_type=scf_field_group');
 }, 5);
