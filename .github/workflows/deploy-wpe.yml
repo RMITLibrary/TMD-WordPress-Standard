@@ -2,7 +2,7 @@ name: Deploy to WP Engine
 
 on:
   push:
-    branches: [main, develop, staging]
+    branches: [main, master, develop, staging]
   workflow_dispatch:
 
 jobs:
@@ -15,26 +15,26 @@ jobs:
           fetch-depth: 0
 
       - name: Select WP Engine environment
+        id: env
         run: |
           BRANCH="${GITHUB_REF##*/}"
-          if [ "$BRANCH" = "main" ]; then
-            echo "WPE_ENV=${{ secrets.WPE_ENV_PRD }}" >> $GITHUB_ENV
+          if [ "$BRANCH" = "main" ] || [ "$BRANCH" = "master" ]; then
+            echo "wpe_env=${{ secrets.WPE_ENV_PRD }}" >> $GITHUB_OUTPUT
           elif [ "$BRANCH" = "develop" ]; then
-            echo "WPE_ENV=${{ secrets.WPE_ENV_DEV }}" >> $GITHUB_ENV
+            echo "wpe_env=${{ secrets.WPE_ENV_DEV }}" >> $GITHUB_OUTPUT
           elif [ "$BRANCH" = "staging" ]; then
-            echo "WPE_ENV=${{ secrets.WPE_ENV_STG }}" >> $GITHUB_ENV
+            echo "wpe_env=${{ secrets.WPE_ENV_STG }}" >> $GITHUB_OUTPUT
           else
             echo "Unsupported branch: $BRANCH" >&2
             exit 1
           fi
-
       - name: Deploy wp-content to WP Engine
         uses: wpengine/github-action-wpe-site-deploy@v3
         with:
           WPE_SSHG_KEY_PRIVATE: ${{ secrets.WPE_SSHG_KEY_PRIVATE }}
-          WPE_ENV: ${{ env.WPE_ENV }}
-          SRC_PATH: 'wp-content/'
-          REMOTE_PATH: '/wp-content/'
+          WPE_ENV: ${{ steps.env.outputs.wpe_env }}
+          SRC_PATH: "wp-content/"
+          REMOTE_PATH: "/wp-content/"
           CACHE_CLEAR: true
           EXCLUDE: |
             .git
