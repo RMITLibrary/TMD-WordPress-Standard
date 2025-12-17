@@ -1,0 +1,46 @@
+name: Deploy to WP Engine
+
+on:
+  push:
+    branches: [main, develop, staging]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Select WP Engine environment
+        run: |
+          BRANCH="${GITHUB_REF##*/}"
+          if [ "$BRANCH" = "main" ]; then
+            echo "WPE_ENV=${{ secrets.WPE_ENV_PRD }}" >> $GITHUB_ENV
+          elif [ "$BRANCH" = "develop" ]; then
+            echo "WPE_ENV=${{ secrets.WPE_ENV_DEV }}" >> $GITHUB_ENV
+          elif [ "$BRANCH" = "staging" ]; then
+            echo "WPE_ENV=${{ secrets.WPE_ENV_STG }}" >> $GITHUB_ENV
+          else
+            echo "Unsupported branch: $BRANCH" >&2
+            exit 1
+          fi
+
+      - name: Deploy wp-content to WP Engine
+        uses: wpengine/github-action-wpe-site-deploy@v3
+        with:
+          WPE_SSHG_KEY_PRIVATE: ${{ secrets.WPE_SSHG_KEY_PRIVATE }}
+          WPE_ENV: ${{ env.WPE_ENV }}
+          SRC_PATH: 'wp-content/'
+          REMOTE_PATH: '/wp-content/'
+          CACHE_CLEAR: true
+          EXCLUDE: |
+            .git
+            .github
+            wp-content/uploads
+            node_modules
+            **/*.map
+            .env
+            .env.*
