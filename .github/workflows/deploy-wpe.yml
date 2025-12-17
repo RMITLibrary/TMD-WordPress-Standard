@@ -36,11 +36,3 @@ jobs:
           SRC_PATH: "wp-content/"
           REMOTE_PATH: "/wp-content/"
           CACHE_CLEAR: true
-          EXCLUDE: |
-            .git
-            .github
-            wp-content/uploads
-            node_modules
-            **/*.map
-            .env
-            .env.*
