@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+vendor/
+
+# VCS
+.git/
+
+# WordPress generated/cache
+wp-content/cache/
+wp-content/uploads/
+
+# Build output
+build/
+dist/
+coverage/
+
+# Maps & minified assets
+*.map
+*.min.js
+*.min.css
+
+# OS/editor files
+.DS_Store
+.idea/
+.vscode/

@@ -1512,7 +1512,7 @@
                     "save_terms": 1,
                     "load_terms": 1,
                     "return_format": "id",
-                    "field_type": "select",
+                    "field_type": "radio",
                     "allow_null": 1,
                     "acfe_bidirectional": {
                         "acfe_bidirectional_enabled": "0"
@@ -1687,5 +1687,5 @@
     "graphql_types": "",
     "acfe_meta": "",
     "acfe_note": "",
-    "modified": 1765939884
+    "modified": 1765950983
 }
