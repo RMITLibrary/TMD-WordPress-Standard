@@ -43,6 +43,31 @@
             "graphql_field_name": "heroSwatches",
             "graphql_connection_type": "one_to_many",
             "bidirectional_target": []
+        },
+        {
+            "key": "field_695eede1761a9",
+            "label": "About section",
+            "name": "about",
+            "aria-label": "",
+            "type": "wysiwyg",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "allow_in_bindings": 0,
+            "tabs": "all",
+            "toolbar": "basic",
+            "media_upload": 0,
+            "delay": 1,
+            "show_in_graphql": 1,
+            "graphql_description": "",
+            "graphql_field_name": "about",
+            "graphql_non_null": 0
         }
     ],
     "location": [
@@ -74,5 +99,5 @@
     "graphql_types": "",
     "acfe_meta": "",
     "acfe_note": "",
-    "modified": 1767678031
+    "modified": 1767829010
 }
