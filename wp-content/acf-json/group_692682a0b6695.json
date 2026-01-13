@@ -1278,6 +1278,64 @@
             "preview_size": "thumbnail"
         },
         {
+            "key": "field_6965b9cd6c0b8",
+            "label": "Surface feature micrographs (1–4)",
+            "name": "surface_feature_micrographs_1–4",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "acfe_repeater_stylised_button": 0,
+            "layout": "table",
+            "pagination": 0,
+            "min": 0,
+            "max": 0,
+            "collapsed": "",
+            "button_label": "Add Row",
+            "show_in_graphql": 1,
+            "graphql_description": "",
+            "graphql_field_name": "surfaceFeatureMicrographs14",
+            "graphql_non_null": 0,
+            "rows_per_page": 20,
+            "sub_fields": [
+                {
+                    "key": "field_6965b9ef6c0b9",
+                    "label": "Micrograph",
+                    "name": "micrograph",
+                    "aria-label": "",
+                    "type": "clone",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "graphql_field_name": "micrograph",
+                    "clone": [
+                        "group_69278d63d3b33"
+                    ],
+                    "display": "seamless",
+                    "layout": "block",
+                    "prefix_label": 0,
+                    "prefix_name": 0,
+                    "acfe_seamless_style": 0,
+                    "acfe_clone_modal": 0,
+                    "acfe_clone_modal_close": 0,
+                    "acfe_clone_modal_button": "",
+                    "acfe_clone_modal_size": "large",
+                    "parent_repeater": "field_6965b9cd6c0b8"
+                }
+            ]
+        },
+        {
             "key": "field_69268e76e8a3a",
             "label": "Videos",
             "name": "videos",
@@ -1363,5 +1421,5 @@
     "graphql_types": "",
     "acfe_meta": "",
     "acfe_note": "",
-    "modified": 1765939894
+    "modified": 1768274451
 }
