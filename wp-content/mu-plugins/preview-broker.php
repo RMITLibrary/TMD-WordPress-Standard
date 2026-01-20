@@ -120,10 +120,6 @@ add_action('rest_api_init', function () {
                 return new \WP_Error('forbidden', 'Invalid token', ['status' => 403]);
             }
 
-            if (!current_user_can('edit_post', $id)) {
-                return new \WP_Error('forbidden', 'Insufficient capability', ['status' => 403]);
-            }
-
             return [
                 'valid' => true,
                 'id' => $id,
