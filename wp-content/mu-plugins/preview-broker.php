@@ -90,7 +90,7 @@ add_filter('preview_post_link', function ($preview_link, $post) {
         'user' => get_current_user_id(),
     ];
 
-    $token = tmd_preview_token($payload, 300); // 5 min
+    $token = tmd_preview_token($payload, 900); // 15 min
     $query = http_build_query([
         'id' => $post->ID,
         'type' => $post->post_type,
