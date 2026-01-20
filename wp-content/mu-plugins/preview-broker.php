@@ -120,10 +120,51 @@ add_action('rest_api_init', function () {
                 return new \WP_Error('forbidden', 'Invalid token', ['status' => 403]);
             }
 
+            $username = defined('TMD_PREVIEW_JWT_USER') ? TMD_PREVIEW_JWT_USER : '';
+            $password = defined('TMD_PREVIEW_JWT_APP_PASSWORD') ? TMD_PREVIEW_JWT_APP_PASSWORD : '';
+
+            if (!$username || !$password) {
+                return new \WP_Error('missing_jwt_creds', 'Preview JWT credentials missing', ['status' => 500]);
+            }
+
+            $graphql_endpoint = home_url('/graphql');
+            $graphql_query = 'mutation LoginUser($username: String!, $password: String!) { login(input: { username: $username, password: $password }) { authToken } }';
+            $jwt_response = wp_remote_post(
+                $graphql_endpoint,
+                [
+                    'headers' => [
+                        'Content-Type' => 'application/json',
+                    ],
+                    'body' => wp_json_encode([
+                        'query' => $graphql_query,
+                        'variables' => [
+                            'username' => $username,
+                            'password' => $password,
+                        ],
+                    ]),
+                    'timeout' => 10,
+                ]
+            );
+
+            if (is_wp_error($jwt_response)) {
+                return new \WP_Error('jwt_request_failed', $jwt_response->get_error_message(), ['status' => 500]);
+            }
+
+            $jwt_body = json_decode(wp_remote_retrieve_body($jwt_response), true);
+            if (!$jwt_body || isset($jwt_body['errors'])) {
+                return new \WP_Error('jwt_missing', 'JWT token missing from response', ['status' => 500]);
+            }
+            $jwt_token = $jwt_body['data']['login']['authToken'] ?? '';
+
+            if (!$jwt_token) {
+                return new \WP_Error('jwt_missing', 'JWT token missing from response', ['status' => 500]);
+            }
+
             return [
                 'valid' => true,
                 'id' => $id,
                 'type' => $type,
+                'token' => $jwt_token,
             ];
         },
         'permission_callback' => '__return_true', // Token is the gate; ensure HTTPS.
